@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ระบบพนักงาน</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <link href="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.js"></script>
+
+  <style>
+    @keyframes bounce {
+      0%,
+      80%,
+      100% {
+        transform: scale(0);
+      }
+
+      40% {
+        transform: scale(1);
+      }
+    }
+
+    .tab-link::before {
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      content: "";
+      font-size: 1.5rem;
+      margin-right: 12px;
+      color: #e10600;
+      display: block;
+    }
+
+    .tab-link:nth-child(1)::before {
+      content: "\f007";
+    }
+
+    .tab-link:nth-child(2)::before {
+      content: "\f274";
+    }
+
+    .tab-link:nth-child(3)::before {
+      content: "\f274";
+    }
+
+    .tab-link:nth-child(4)::before {
+      content: "\f0a0";
+    }
+
+    .tab-link:nth-child(5)::before {
+      content: "\f02d";
+    }
+
+    .tab-link:nth-child(6)::before {
+      content: "\f06a";
+    }
+
+    .tab-link.active:nth-child(1)::before,
+    .tab-link.active:nth-child(2)::before,
+    .tab-link.active:nth-child(3)::before,
+    .tab-link.active:nth-child(4)::before,
+    .tab-link.active:nth-child(5)::before,
+    .tab-link.active:nth-child(6)::before {
+      color: #ffffff;
+    }
+
+    /* Modal Styling */
+    .custom-modal {
+      position: fixed;
+      z-index: 999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.4);
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .custom-modal.show {
+      display: flex;
+    }
+
+    .custom-modal-content {
+      background-color: #fefefe;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 90%;
+      position: relative;
+    }
+
+    .close-button {
+      position: absolute;
+      top: 10px;
+      right: 25px;
+      font-size: 2rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body class="font-kanit text-2xl md:text-base">
+
+  <div class="fixed inset-0 bg-black bg-opacity-70 flex flex-col items-center justify-center z-[1000] opacity-0 invisible transition-opacity duration-300" id="loadingOverlay">
+    <div class="dot-loader">
+      <span class="inline-block w-4 h-4 mx-1 bg-white rounded-full animate-bounce"></span>
+      <span class="inline-block w-4 h-4 mx-1 bg-white rounded-full animate-bounce" style="animation-delay: -0.16s;"></span>
+      <span class="inline-block w-4 h-4 mx-1 bg-white rounded-full animate-bounce" style="animation-delay: -0.32s;"></span>
+    </div>
+    <p class="text-white mt-4 text-xl" id="loadingText">กำลังดำเนินการ...</p>
+  </div>
+
+  <div class="w-full h-full flex items-center justify-center bg-[#1a1a1a] min-h-screen relative overflow-hidden" id="loginWrapper">
+    <div id="loginForm" class="w-full max-w-2xl p-8 rounded-2xl shadow-xl">
+      <h2 class="text-white text-5xl font-bold text-center mb-4">เข้าสู่ระบบ<span class="text-[#e10600]"> พนักงาน</span></h2>
+      <p class="text-3xl text-gray-400 text-center mb-8">โตโยต้า เอ็กซเซลเลนท์</p>
+      <div class="bg-gradient-to-r from-[#e10600] to-black h-1.5 my-6"></div>
+
+      <label class="block font-medium text-gray-300 mb-2">รหัสพนักงาน</label>
+      <div class="relative mb-6">
+        <input class="w-full p-6 border border-gray-300 rounded-lg bg-gray-50 text-xl focus:border-sky-500 focus:bg-white focus:outline-none" type="tel" inputmode="numeric" id="empID" placeholder="รหัสพนักงาน" required autocomplete="off" />
+      </div>
+
+      <label class="block font-medium text-gray-300 mb-2">พาสเวิร์ด</label>
+      <div class="relative mb-6">
+        <input class="w-full p-6 border border-gray-300 rounded-lg bg-gray-50 text-xl focus:border-sky-500 focus:bg-white focus:outline-none" type="password" id="password" placeholder="รหัสผ่าน" required autocomplete="off" />
+      </div>
+
+      <button class="w-full py-4 bg-[#e10600] rounded-full text-white font-semibold cursor-pointer transition-all duration-300 mt-2 shadow-lg hover:bg-red-600 hover:scale-[0.99] active:scale-98" onclick="loginUser()">เข้าสู่ระบบ</button>
+
+      <div id="loginMessage" class="text-red-400 text-center mt-4 min-h-[20px]"></div>
+
+      <p class="text-gray-400 text-center mt-5">
+        ยังไม่มีบัญชี? <a href="#" class="text-[#e10600] no-underline font-medium hover:underline">สมัครสมาชิก</a>
+      </p>
+    </div>
+  </div>
+
+  <div class="bg-gray-100 text-gray-800 min-h-screen flex flex-col hidden" id="dashboard">
+
+    <header class="bg-white p-4 lg:p-8 flex flex-wrap justify-between items-center shadow-md">
+      <div class="flex items-center">
+        <img src="https://i.ibb.co/6Pqj4zX/logo-hrm.png" alt="โลโก้" class="h-10 lg:h-12 mr-4" />
+        <span class="font-bold text-xl md:text-2xl">ระบบจัดการพนักงาน (HRM)</span>
+      </div>
+
+      <div class="flex flex-wrap items-center mt-4 lg:mt-0 md:text-xl">
+        <div class="flex items-center mr-4 lg:mr-8">
+          <img id="profilePhoto" src="https://i.ibb.co/3kXpYv9/User.png" class="w-12 h-12 rounded-full object-cover border-4 border-white cursor-pointer" onclick="showModal('profilePhotoModal')" />
+          <div class="ml-2">
+            <h4 class="m-0 text-xl font-semibold" id="userName"></h4>
+            <p class="m-0 text-gray-500 text-base" id="employeeID"></p>
+          </div>
+        </div>
+        <button class="bg-red-600 text-white px-4 py-2 rounded-md cursor-pointer text-base transition-colors duration-300 hover:bg-red-700" id="logoutBtn" onclick="logoutUser()">ออกจากระบบ</button>
+      </div>
+    </header>
+
+    <main class="flex-grow p-4 md:p-8 flex flex-col">
+      <nav class="bg-white rounded-xl shadow-md mb-8 flex flex-wrap justify-center overflow-hidden">
+        <a class="tab-link flex-grow text-center py-4 lg:py-6 px-4 cursor-pointer transition-all duration-300 relative text-xl lg:text-2xl font-semibold text-gray-600 border-b-2 border-transparent hover:bg-gray-100" id="tab-profile" onclick="changeTab('profile')">Profile</a>
+        <a class="tab-link flex-grow text-center py-4 lg:py-6 px-4 cursor-pointer transition-all duration-300 relative text-xl lg:text-2xl font-semibold text-gray-600 border-b-2 border-transparent hover:bg-gray-100" id="tab-late-records" onclick="changeTab('late-records')">บันทึกการมาสาย</a>
+        <a class="tab-link flex-grow text-center py-4 lg:py-6 px-4 cursor-pointer transition-all duration-300 relative text-xl lg:text-2xl font-semibold text-gray-600 border-b-2 border-transparent hover:bg-gray-100" id="tab-leave-records" onclick="changeTab('leave-records')">บันทึกการลา</a>
+        <a class="tab-link flex-grow text-center py-4 lg:py-6 px-4 cursor-pointer transition-all duration-300 relative text-xl lg:text-2xl font-semibold text-gray-600 border-b-2 border-transparent hover:bg-gray-100" id="tab-article" onclick="changeTab('article')">บทความ</a>
+        <a class="tab-link flex-grow text-center py-4 lg:py-6 px-4 cursor-pointer transition-all duration-300 relative text-xl lg:text-2xl font-semibold text-gray-600 border-b-2 border-transparent hover:bg-gray-100" id="tab-warnings" onclick="changeTab('warnings')">ใบเตือน</a>
+        <a class="tab-link flex-grow text-center py-4 lg:py-6 px-4 cursor-pointer transition-all duration-300 relative text-xl lg:text-2xl font-semibold text-gray-600 border-b-2 border-transparent hover:bg-gray-100" id="tab-supervisor" onclick="changeTab('supervisor')">อนุมัติคำขอ</a>
+      </nav>
+
+      <div id="tab-content-profile" class="tab-content active bg-white p-8 rounded-xl shadow-md">
+        <div class="flex flex-col md:flex-row items-center mb-6">
+          <div class="mb-6 md:mb-0 md:mr-8 text-center">
+            <img id="profilePhotoMain" src="https://i.ibb.co/3kXpYv9/User.png" class="w-40 h-40 rounded-full object-cover border-4 border-red-600 shadow-md" />
+          </div>
+          <div class="w-full">
+            <h3 class="text-3xl font-bold border-b-2 border-red-600 pb-2 mb-4">ข้อมูลส่วนตัว</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <p class="bg-gray-100 p-4 rounded-lg"><strong>รหัสพนักงาน:</strong> <span id="profileEmpID"></span></p>
+              <p class="bg-gray-100 p-4 rounded-lg"><strong>ชื่อ-นามสกุล:</strong> <span id="profileFullName"></span></p>
+              <p class="bg-gray-100 p-4 rounded-lg"><strong>ชื่อเล่น:</strong> <span id="profileNickname"></span></p>
+              <p class="bg-gray-100 p-4 rounded-lg"><strong>ตำแหน่ง:</strong> <span id="profilePosition"></span></p>
+              <p class="bg-gray-100 p-4 rounded-lg"><strong>แผนก:</strong> <span id="profileDepartment"></span></p>
+              <p class="bg-gray-100 p-4 rounded-lg"><strong>ฝ่าย:</strong> <span id="profileSection"></span></p>
+              <p class="bg-gray-100 p-4 rounded-lg"><strong>บริษัท:</strong> <span id="profileBranch"></span></p>
+              <p class="bg-gray-100 p-4 rounded-lg"><strong>เบอร์โทร:</strong> <span id="profilePhone"></span></p>
+              <p class="bg-gray-100 p-4 rounded-lg"><strong>วันที่เริ่มงาน:</strong> <span id="profileStartDate"></span></p>
+              <p class="bg-gray-100 p-4 rounded-lg"><strong>สถานะงาน:</strong> <span id="profileWorkStatus"></span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="tab-content-late-records" class="tab-content hidden bg-white p-8 rounded-xl shadow-md">
+        <h3 class="text-3xl font-bold border-b-2 border-red-600 pb-2 mb-4">บันทึกการมาสาย</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="lateRecordsContainer">
+          </div>
+        <p id="lateRecordsMessage" class="mt-4 text-center text-gray-600 hidden">ไม่พบบันทึกการมาสาย</p>
+      </div>
+
+      <div id="tab-content-leave-records" class="tab-content hidden bg-white p-8 rounded-xl shadow-md">
+        <h3 class="text-3xl font-bold border-b-2 border-red-600 pb-2 mb-4">บันทึกการลา</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6" id="leaveSummaryContainer">
+          </div>
+        <div class="overflow-x-auto">
+          <table class="w-full min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
+            <thead>
+              <tr class="bg-gray-100 text-left text-gray-700">
+                <th class="py-3 px-4 font-semibold">ประเภทการลา</th>
+                <th class="py-3 px-4 font-semibold">ช่วงเวลา</th>
+                <th class="py-3 px-4 font-semibold">วันที่ลา</th>
+                <th class="py-3 px-4 font-semibold">ถึงวันที่</th>
+                <th class="py-3 px-4 font-semibold">จำนวน</th>
+                <th class="py-3 px-4 font-semibold">สถานะ</th>
+                <th class="py-3 px-4 font-semibold">Action</th>
+              </tr>
+            </thead>
+            <tbody id="leaveRecordsTableBody" class="text-gray-600">
+              </tbody>
+          </table>
+        </div>
+        <p id="leaveRecordsMessage" class="mt-4 text-center text-gray-600 hidden">ไม่พบบันทึกการลา</p>
+      </div>
+
+      <div id="tab-content-article" class="tab-content hidden bg-white p-8 rounded-xl shadow-md">
+        <h3 class="text-3xl font-bold border-b-2 border-red-600 pb-2 mb-4">บทความที่น่าสนใจ</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
+            <thead>
+              <tr class="bg-gray-100 text-left text-gray-700">
+                <th class="py-3 px-4 font-semibold">หัวข้อบทความ</th>
+                <th class="py-3 px-4 font-semibold">วันเผยแพร่</th>
+                <th class="py-3 px-4 font-semibold">ดาวน์โหลด</th>
+              </tr>
+            </thead>
+            <tbody id="articleTableBody" class="text-gray-600">
+              </tbody>
+          </table>
+        </div>
+        <p id="articleMessage" class="mt-4 text-center text-gray-600 hidden">ไม่พบบทความ</p>
+      </div>
+
+      <div id="tab-content-warnings" class="tab-content hidden bg-white p-8 rounded-xl shadow-md">
+        <h3 class="text-3xl font-bold border-b-2 border-red-600 pb-2 mb-4">ใบเตือน</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
+            <thead>
+              <tr class="bg-gray-100 text-left text-gray-700">
+                <th class="py-3 px-4 font-semibold">ประเภทใบเตือน</th>
+                <th class="py-3 px-4 font-semibold">เหตุผล</th>
+                <th class="py-3 px-4 font-semibold">วันที่ออก</th>
+                <th class="py-3 px-4 font-semibold">อายุคงเหลือ (วัน)</th>
+                <th class="py-3 px-4 font-semibold">ไฟล์แนบ</th>
+              </tr>
+            </thead>
+            <tbody id="warningsTableBody" class="text-gray-600">
+              </tbody>
+          </table>
+        </div>
+        <p id="warningsMessage" class="mt-4 text-center text-gray-600 hidden">ไม่พบใบเตือน</p>
+      </div>
+
+      <div id="tab-content-supervisor" class="tab-content hidden bg-white p-8 rounded-xl shadow-md">
+        <div class="flex flex-col md:flex-row items-center justify-between mb-6">
+          <h3 class="text-3xl font-bold border-b-2 border-red-600 pb-2 mb-4 md:mb-0">การอนุมัติคำขอ</h3>
+          <div class="flex items-center">
+            <span class="text-lg mr-2 text-gray-600">สถานะ:</span>
+            <select id="leaveStatusFilter" class="form-select border rounded-md p-2 text-base">
+              <option value="all">ทั้งหมด</option>
+              <option value="Pending">รออนุมัติ</option>
+              <option value="Approved">อนุมัติแล้ว</option>
+              <option value="Rejected">ไม่อนุมัติ</option>
+            </select>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
+            <thead>
+              <tr class="bg-gray-100 text-left text-gray-700">
+                <th class="py-3 px-4 font-semibold">รหัสพนักงาน</th>
+                <th class="py-3 px-4 font-semibold">ประเภท</th>
+                <th class="py-3 px-4 font-semibold">วันที่</th>
+                <th class="py-3 px-4 font-semibold">จำนวน</th>
+                <th class="py-3 px-4 font-semibold">สถานะ</th>
+                <th class="py-3 px-4 font-semibold">Action</th>
+              </tr>
+            </thead>
+            <tbody id="leaveApprovalTableBody" class="text-gray-600">
+              </tbody>
+          </table>
+        </div>
+        <p id="leaveApprovalMessage" class="mt-4 text-center text-gray-600 hidden">ไม่พบคำขออนุมัติ</p>
+      </div>
+    </main>
+
+  </div>
+
+  <div class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 z-[1000] justify-center items-center hidden" id="editReasonModal">
+    <div class="modal-content bg-white p-8 rounded-xl relative w-full max-w-lg shadow-xl">
+      <span class="close-button absolute top-4 right-6 text-3xl font-bold cursor-pointer text-gray-400 hover:text-gray-700" onclick="hideModal('editReasonModal')">&times;</span>
+      <h3 class="text-3xl text-red-600 font-bold border-b-2 border-red-600 pb-2 mb-6">แก้ไขเหตุผลการมาสาย</h3>
+      <div id="editReasonForm" class="flex flex-col space-y-4">
+        <label class="font-semibold text-lg">วันที่:</label>
+        <input type="text" id="editDateDisplay" class="form-input w-full p-3 border border-gray-300 rounded-md text-lg" readonly>
+        <label class="font-semibold text-lg">เวลาที่มาถึง:</label>
+        <input type="text" id="editTimeDisplay" class="form-input w-full p-3 border border-gray-300 rounded-md text-lg" readonly>
+        <label class="font-semibold text-lg">เหตุผล:</label>
+        <textarea id="editReasonText" class="form-input w-full p-3 border border-gray-300 rounded-md text-lg" rows="3" required></textarea>
+        <div id="editReasonMessage" class="alert text-lg mt-2"></div>
+        <div class="flex justify-between items-center mt-4">
+          <button class="btn bg-blue-600 text-white px-6 py-2 rounded-md transition-colors duration-300 hover:bg-blue-700" id="saveReasonButton" onclick="saveEditedReason()">บันทึก</button>
+          <button class="btn bg-gray-300 text-gray-800 px-6 py-2 rounded-md transition-colors duration-300 hover:bg-gray-400" onclick="hideModal('editReasonModal')">ยกเลิก</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="leaveDetailModal" class="custom-modal">
+    <div class="custom-modal-content">
+      <button class="close-btn" onclick="closeModal()">
+        <i class="fas fa-times"></i>
+      </button>
+      <div id="leaveDetailContent"></div>
+    </div>
+  </div>
+
+  <div id="showLeaveDetailModal" class="custom-modal">
+    <div class="custom-modal-content">
+      <button class="close-btn" onclick="closeshowModal()">
+        <i class="fas fa-times"></i>
+      </button>
+      <div id="showleaveDetailContent"></div>
+    </div>
+  </div>
+
+  <div id="profilePhotoModal" class="custom-modal">
+    <div class="custom-modal-content">
+      <button class="close-button" onclick="hideModal('profilePhotoModal')">&times;</button>
+      <div class="text-center p-4">
+        <h3 class="text-3xl text-red-600 font-bold mb-4">อัปโหลดรูปภาพโปรไฟล์</h3>
+        <div class="mb-4">
+          <img id="imagePreview" class="w-full h-auto max-w-xs mx-auto mb-4 border border-gray-300" src="" alt="Image to be cropped">
+        </div>
+        <input type="file" id="imageInput" accept="image/*" class="w-full mb-4 p-2 border rounded-md" />
+        <div class="flex justify-center space-x-4">
+          <button id="uploadButton" class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700" onclick="uploadImage()">อัปโหลด</button>
+          <button id="cancelButton" class="bg-gray-300 text-gray-800 px-6 py-2 rounded-md hover:bg-gray-400" onclick="hideModal('profilePhotoModal')">ยกเลิก</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="uploadLeaveAttachmentModal" class="custom-modal">
+    <div class="custom-modal-content">
+      <span class="close-button" onclick="hideModal('uploadLeaveAttachmentModal')">&times;</span>
+      <h3 class="text-3xl text-red-600 font-bold mb-4">อัปโหลดไฟล์แนบสำหรับการลา</h3>
+      <input type="file" id="leaveAttachmentInput" class="w-full mb-4 p-2 border rounded-md" accept=".pdf, .jpg, .jpeg, .png" />
+      <div id="attachmentMessage" class="alert mt-2"></div>
+      <button id="submitAttachment" class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700" onclick="uploadAttachment()">ส่ง</button>
+      <button class="bg-gray-300 text-gray-800 px-6 py-2 rounded-md hover:bg-gray-400" onclick="hideModal('uploadLeaveAttachmentModal')">ยกเลิก</button>
+    </div>
+  </div>
+
+
+  <script>
+    // ================================================================
+    // 1. Global Variables & Initialization
+    //    (ตัวแปรหลักที่ใช้ทั่วทั้งหน้า, Event Listener ที่ทำงานเมื่อ DOM โหลดเสร็จ)
+    // ================================================================
+    let currentLoggedInEmpID = null;
+    let currentLoggedInRole = null;
+    let myLeaveChartInstances = {}; // ใช้สำหรับเก็บ instance ของ chart แต่ละตัว หากมีหลาย chart
+    let cropperInstance = null;
+    let currentUploadType = null;
+    let currentLateRecordToEdit = null;
+    const leaveQuota = {};
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // ซ่อน dashboard และแสดง login form เมื่อโหลดหน้าครั้งแรก
+      document.getElementById('dashboard').classList.add('hidden');
+      document.getElementById('loginWrapper').classList.remove('hidden');
+
+      // 💡 NEW: พยายามกู้คืนสถานะการล็อกอินจาก sessionStorage ทันทีที่ DOM โหลด
+      const storedEmpID = sessionStorage.getItem('loggedInEmpID');
+      const storedRole = sessionStorage.getItem('loggedInRole');
+
+      if (storedEmpID && storedRole) {
+        currentLoggedInEmpID = storedEmpID;
+        currentLoggedInRole = storedRole;
+        document.getElementById('loginWrapper').classList.add('hidden');
+        document.getElementById('dashboard').classList.remove('hidden');
+        displayEmployeeData({
+          success: true,
+          empID: storedEmpID,
+          role: storedRole
+        }); // โหลดข้อมูลพนักงาน
+        updateUIForRole(storedRole); // อัปเดต UI ตาม Role
+        // 💡 NEW: เปิดแท็บ Profile เป็นค่าเริ่มต้นเมื่อรีเฟรชหน้า
+        changeTab('profile');
+      }
+    });
+
+    // ================================================================
+    // 2. Navigation & UI Management
+    //    (ฟังก์ชันสำหรับเปลี่ยนหน้า/ซ่อน-แสดงส่วนต่างๆ)
+    // ================================================================
+    function showLoading(text = 'กำลังดำเนินการ...') {
+      document.getElementById('loadingText').innerText = text;
+      document.getElementById('loadingOverlay').classList.add('opacity-100', 'visible');
+      document.getElementById('loadingOverlay').classList.remove('opacity-0', 'invisible');
+    }
+
+    function hideLoading() {
+      document.getElementById('loadingOverlay').classList.add('opacity-0', 'invisible');
+      document.getElementById('loadingOverlay').classList.remove('opacity-100', 'visible');
+    }
+
+    function showMessage(elementId, message, type = 'danger') {
+      const element = document.getElementById(elementId);
+      element.innerText = message;
+      element.classList.remove('alert-success', 'alert-danger', 'hidden');
+      element.classList.add(type === 'success' ? 'alert-success' : 'alert-danger');
+    }
+
+    function hideMessage(elementId) {
+      const element = document.getElementById(elementId);
+      element.innerText = '';
+      element.classList.add('hidden');
+    }
+
+    function changeTab(tabName) {
+      // ซ่อนเนื้อหาทั้งหมด
+      document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+        tab.classList.add('hidden');
+      });
+
+      // ลบคลาส active จากปุ่มทั้งหมด
+      document.querySelectorAll('.tab-link').forEach(link => {
+        link.classList.remove('active', 'bg-red-600', 'text-white');
+        link.classList.add('text-gray-600');
+      });
+
+      // แสดงเนื้อหาของแท็บที่เลือก
+      document.getElementById(`tab-content-${tabName}`).classList.add('active');
+      document.getElementById(`tab-content-${tabName}`).classList.remove('hidden');
+
+      // เพิ่มคลาส active ให้ปุ่มที่เลือก
+      document.getElementById(`tab-${tabName}`).classList.add('active', 'bg-red-600', 'text-white');
+      document.getElementById(`tab-${tabName}`).classList.remove('text-gray-600');
+
+      // โหลดข้อมูลตามแท็บ
+      if (tabName === 'profile') {
+        // ข้อมูล Profile ถูกโหลดตั้งแต่ตอน login แล้ว
+      } else if (tabName === 'late-records') {
+        getLateRecords(currentLoggedInEmpID);
+      } else if (tabName === 'leave-records') {
+        getLeaveData(currentLoggedInEmpID);
+      } else if (tabName === 'article') {
+        getArticles();
+      } else if (tabName === 'warnings') {
+        getWarnings();
+      } else if (tabName === 'supervisor') {
+        getPendingLeaveRequests();
+      }
+    }
+
+    function updateUIForRole(role) {
+      const supervisorTab = document.getElementById('tab-supervisor');
+      if (role === 'admin' || role === 'supervisor') {
+        supervisorTab.classList.remove('hidden');
+      } else {
+        supervisorTab.classList.add('hidden');
+      }
+    }
+
+    function showModal(modalId) {
+      document.getElementById(modalId).classList.add('show');
+    }
+
+    function hideModal(modalId) {
+      document.getElementById(modalId).classList.remove('show');
+    }
+
+    // ================================================================
+    // 3. User Authentication & Profile
+    //    (ฟังก์ชันสำหรับการเข้าสู่ระบบ, ออกจากระบบ, และแสดงข้อมูลโปรไฟล์)
+    // ================================================================
+    function loginUser() {
+      const empID = document.getElementById('empID').value;
+      const password = document.getElementById('password').value;
+
+      if (!empID || !password) {
+        showMessage('loginMessage', 'กรุณากรอกรหัสพนักงานและรหัสผ่าน');
+        return;
+      }
+
+      showLoading('กำลังเข้าสู่ระบบ...');
+      google.script.run
+        .withSuccessHandler(function(response) {
+          if (response.success) {
+            currentLoggedInEmpID = response.empID;
+            currentLoggedInRole = response.role;
+            sessionStorage.setItem('loggedInEmpID', currentLoggedInEmpID);
+            sessionStorage.setItem('loggedInRole', currentLoggedInRole);
+            displayEmployeeData(response);
+            updateUIForRole(response.role);
+            document.getElementById('loginWrapper').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+            changeTab('profile');
+          } else {
+            showMessage('loginMessage', response.message);
+          }
+          hideLoading();
+        })
+        .withFailureHandler(function(error) {
+          showMessage('loginMessage', 'เกิดข้อผิดพลาดในการเชื่อมต่อ');
+          console.error(error);
+          hideLoading();
+        })
+        .authenticateUser(empID, password);
+    }
+
+    function logoutUser() {
+      sessionStorage.clear();
+      currentLoggedInEmpID = null;
+      currentLoggedInRole = null;
+      document.getElementById('dashboard').classList.add('hidden');
+      document.getElementById('loginWrapper').classList.remove('hidden');
+      document.getElementById('loginForm').reset();
+      hideLoading();
+      window.location.reload();
+    }
+
+
+    function displayEmployeeData(response) {
+      // แสดงข้อมูลใน Header
+      document.getElementById('userName').innerText = response.fullName;
+      document.getElementById('employeeID').innerText = response.empID;
+
+      // แสดงข้อมูลใน Tab Profile
+      document.getElementById('profileEmpID').innerText = response.empID;
+      document.getElementById('profileFullName').innerText = response.fullName;
+      document.getElementById('profileNickname').innerText = response.nickname;
+      document.getElementById('profilePosition').innerText = response.position;
+      document.getElementById('profileDepartment').innerText = response.department;
+      document.getElementById('profileSection').innerText = response.section;
+      document.getElementById('profileBranch').innerText = response.branch;
+      document.getElementById('profilePhone').innerText = response.phone;
+      document.getElementById('profileStartDate').innerText = response.startDate;
+      document.getElementById('profileWorkStatus').innerText = response.workStatus;
+
+      // แสดงรูปภาพโปรไฟล์ (ถ้ามี)
+      const profilePhotoUrl = response.imageUrl || 'https://i.ibb.co/3kXpYv9/User.png';
+      document.getElementById('profilePhoto').src = profilePhotoUrl;
+      document.getElementById('profilePhotoMain').src = profilePhotoUrl;
+    }
+
+
+    // ================================================================
+    // 4. Time and Leave Records
+    //    (ฟังก์ชันสำหรับแสดงข้อมูลบันทึกการมาสาย, และการลา)
+    // ================================================================
+    function getLateRecords(empID) {
+      showLoading('กำลังโหลดบันทึกการมาสาย...');
+      google.script.run
+        .withSuccessHandler(function(response) {
+          const container = document.getElementById('lateRecordsContainer');
+          container.innerHTML = '';
+          const messageElement = document.getElementById('lateRecordsMessage');
+
+          if (response.success && response.data.length > 0) {
+            response.data.forEach(record => {
+              const card = document.createElement('div');
+              card.className = 'bg-white rounded-xl shadow-md p-6 relative transition-transform duration-300 hover:scale-[1.01]';
+              card.innerHTML = `
+                <button class="edit-reason-btn absolute top-4 right-4 text-gray-500 hover:text-gray-800" onclick="editReason('${record.date}', '${record.time}')" data-date="${record.date}" data-time="${record.time}" data-reason="${record.reason}">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <h4 class="text-xl text-red-600 font-bold border-b-2 border-red-600 pb-2 mb-4">วันที่: ${record.date}</h4>
+                <p><strong>เวลามาถึง:</strong> ${record.time}</p>
+                <p><strong>จำนวนนาที:</strong> ${record.lateMinutes}</p>
+                <p><strong>สถานะ:</strong> ${record.status}</p>
+                <p><strong>เหตุผล:</strong> ${record.reason || 'ไม่ระบุ'}</p>
+                <p><strong>บันทึกโดย:</strong> ${record.recorder}</p>
+              `;
+              container.appendChild(card);
+            });
+            messageElement.classList.add('hidden');
+          } else {
+            messageElement.classList.remove('hidden');
+          }
+          hideLoading();
+        })
+        .withFailureHandler(function(err) {
+          console.error("โหลดบันทึกมาสายล้มเหลว:", err);
+          document.getElementById('lateRecordsMessage').classList.remove('hidden');
+          document.getElementById('lateRecordsMessage').innerText = 'เกิดข้อผิดพลาดในการโหลดข้อมูล';
+          hideLoading();
+        })
+        .getLateRecords(empID);
+    }
+
+    function getLeaveData(empID) {
+      showLoading('กำลังโหลดข้อมูลการลา...');
+      google.script.run
+        .withSuccessHandler(function(response) {
+          if (response.success) {
+            displayLeaveSummary(response.summary);
+            getLeaveRecords(empID);
+          } else {
+            console.error(response.message);
+            hideLoading();
+          }
+        })
+        .withFailureHandler(function(err) {
+          console.error("โหลดข้อมูลการลาล้มเหลว:", err);
+          hideLoading();
+        })
+        .getLeaveData(empID);
+    }
+
+    function displayLeaveSummary(summary) {
+      const container = document.getElementById('leaveSummaryContainer');
+      container.innerHTML = '';
+      for (const type in summary) {
+        if (summary.hasOwnProperty(type)) {
+          const card = document.createElement('div');
+          card.className = 'bg-white rounded-xl shadow-lg p-5 flex items-center relative transition-transform duration-300 hover:scale-[1.01]';
+          card.innerHTML = `
+            <div class="relative w-24 h-24 mr-5 flex justify-center items-center">
+              <canvas id="chart-${type}"></canvas>
+              <div class="absolute text-center text-sm font-bold whitespace-nowrap">${summary[type].used}/${summary[type].total}</div>
+            </div>
+            <div class="flex-grow">
+              <strong class="block text-2xl mb-1">${type}</strong>
+              <span class="text-gray-600">ใช้ไป: ${summary[type].used}</span>
+              <span class="text-gray-600 block">คงเหลือ: ${summary[type].remaining}</span>
+            </div>
+            <i class="fas fa-calendar-alt text-[5rem] text-gray-300 opacity-20 absolute top-[-15px] right-[-15px]"></i>
+          `;
+          container.appendChild(card);
+          createChart(document.getElementById(`chart-${type}`), summary[type].used, summary[type].remaining);
+        }
+      }
+    }
+
+
+    function createChart(ctx, used, remaining) {
+      if (myLeaveChartInstances[ctx.id]) {
+        myLeaveChartInstances[ctx.id].destroy();
+      }
+
+      myLeaveChartInstances[ctx.id] = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          datasets: [{
+            data: [used, remaining],
+            backgroundColor: ['#e10600', '#D3D3D3'],
+            borderWidth: 0,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '70%',
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              enabled: false
+            }
+          }
+        }
+      });
+    }
+
+    function getLeaveRecords(empID) {
+      showLoading('กำลังโหลดบันทึกการลา...');
+      google.script.run
+        .withSuccessHandler(function(response) {
+          const tbody = document.getElementById('leaveRecordsTableBody');
+          tbody.innerHTML = '';
+          const messageElement = document.getElementById('leaveRecordsMessage');
+
+          if (response.success && response.data.length > 0) {
+            response.data.forEach(record => {
+              const row = document.createElement('tr');
+              const statusColor = getStatusColor(record.status);
+              const statusText = getStatusText(record.status);
+              row.innerHTML = `
+                  <td class="py-3 px-4">${record.leaveType}</td>
+                  <td class="py-3 px-4">${record.period}</td>
+                  <td class="py-3 px-4">${record.startDate}</td>
+                  <td class="py-3 px-4">${record.endDate}</td>
+                  <td class="py-3 px-4">${record.duration}</td>
+                  <td class="py-3 px-4"><span class="px-2 py-1 rounded-full text-white ${statusColor}">${statusText}</span></td>
+                  <td class="py-3 px-4"><button class="text-blue-500 hover:underline" onclick="showLeaveDetails('${record.timestamp}')">รายละเอียด</button></td>
+              `;
+              tbody.appendChild(row);
+            });
+            messageElement.classList.add('hidden');
+          } else {
+            messageElement.classList.remove('hidden');
+          }
+          hideLoading();
+        })
+        .withFailureHandler(function(err) {
+          console.error("โหลดบันทึกการลาล้มเหลว:", err);
+          document.getElementById('leaveRecordsMessage').classList.remove('hidden');
+          document.getElementById('leaveRecordsMessage').innerText = 'เกิดข้อผิดพลาดในการโหลดข้อมูล';
+          hideLoading();
+        })
+        .getLeaveRecords(empID);
+    }
+
+    function getStatusColor(status) {
+      if (status === 'อนุมัติ') return 'bg-green-500';
+      if (status === 'รออนุมัติ') return 'bg-yellow-500';
+      if (status === 'ไม่อนุมัติ') return 'bg-red-500';
+      return 'bg-gray-500';
+    }
+
+    function getStatusText(status) {
+      if (status === 'อนุมัติ') return 'อนุมัติแล้ว';
+      if (status === 'รออนุมัติ') return 'รออนุมัติ';
+      if (status === 'ไม่อนุมัติ') return 'ไม่อนุมัติ';
+      return 'ไม่ทราบสถานะ';
+    }
+
+
+    function showLeaveDetails(timestamp) {
+      showLoading('กำลังโหลดรายละเอียด...');
+      google.script.run
+        .withSuccessHandler(function(response) {
+          if (response.success) {
+            const detail = response.data;
+            const content = document.getElementById('showleaveDetailContent');
+            content.innerHTML = `
+              <h3 class="text-2xl font-bold mb-4">รายละเอียดคำขอลา</h3>
+              <p><strong>ชื่อ:</strong> ${detail.fullName}</p>
+              <p><strong>รหัสพนักงาน:</strong> ${detail.empID}</p>
+              <p><strong>ประเภทการลา:</strong> ${detail.leaveType}</p>
+              <p><strong>วันที่ลา:</strong> ${detail.startDate} ถึง ${detail.endDate}</p>
+              <p><strong>ช่วงการลา:</strong> ${detail.period}</p>
+              <p><strong>จำนวน:</strong> ${detail.duration}</p>
+              <p><strong>สาเหตุ:</strong> ${detail.reason}</p>
+              <p><strong>สถานะ:</strong> <span class="px-2 py-1 rounded-full text-white ${getStatusColor(detail.status)}">${getStatusText(detail.status)}</span></p>
+            `;
+            showModal('showLeaveDetailModal');
+          } else {
+            alert('ไม่พบรายละเอียดการลา');
+          }
+          hideLoading();
+        })
+        .withFailureHandler(function(err) {
+          console.error("โหลดรายละเอียดการลาล้มเหลว:", err);
+          hideLoading();
+        })
+        .getLeaveRecordByTimestamp(timestamp);
+    }
+
+    // ================================================================
+    // 5. Articles and Warnings
+    //    (ฟังก์ชันสำหรับแสดงข้อมูลบทความและใบเตือน)
+    // ================================================================
+    function getArticles() {
+      showLoading('กำลังโหลดบทความ...');
+      google.script.run
+        .withSuccessHandler(function(response) {
+          const tbody = document.getElementById("articleTableBody");
+          tbody.innerHTML = '';
+          const messageElement = document.getElementById('articleMessage');
+
+          if (response.success && response.data.length > 0) {
+            response.data.forEach(article => {
+              const row = document.createElement("tr");
+              row.className = 'border-b border-gray-200 hover:bg-gray-50 transition-colors';
+              row.innerHTML = `
+                  <td class="py-3 px-4">${article.title}</td>
+                  <td class="py-3 px-4">${article.publishDate}</td>
+                  <td class="py-3 px-4">
+                      ${article.fileLink ? `<a href="${article.fileLink}" target="_blank" class="text-blue-600 hover:underline">เปิดไฟล์</a>` : '-'}
+                  </td>
+              `;
+              tbody.appendChild(row);
+            });
+            messageElement.classList.add('hidden');
+          } else {
+            messageElement.classList.remove('hidden');
+            messageElement.innerText = 'ไม่พบบทความ';
+          }
+          hideLoading();
+        })
+        .withFailureHandler(function(err) {
+          console.error("โหลดบทความล้มเหลว:", err);
+          document.getElementById("articleMessage").classList.remove('hidden');
+          document.getElementById("articleMessage").innerText = 'เกิดข้อผิดพลาดในการโหลดข้อมูล';
+          hideLoading();
+        })
+        .getArticles();
+    }
+
+    function getWarnings() {
+      showLoading('กำลังโหลดใบเตือน...');
+      google.script.run
+        .withSuccessHandler(function(response) {
+          const tbody = document.getElementById('warningsTableBody');
+          tbody.innerHTML = '';
+          const messageElement = document.getElementById('warningsMessage');
+
+          if (response.success && response.data.length > 0) {
+            response.data.forEach(warning => {
+              const row = document.createElement('tr');
+              row.className = 'border-b border-gray-200 hover:bg-gray-50 transition-colors';
+              row.innerHTML = `
+                  <td class="py-3 px-4">${warning.type}</td>
+                  <td class="py-3 px-4">${warning.reason}</td>
+                  <td class="py-3 px-4">${warning.date}</td>
+                  <td class="py-3 px-4">${warning.age}</td>
+                  <td class="py-3 px-4">
+                      ${warning.fileLink ? `<a href="${warning.fileLink}" target="_blank" class="text-blue-600 hover:underline">เปิดไฟล์</a>` : '-'}
+                  </td>
+              `;
+              tbody.appendChild(row);
+            });
+            messageElement.classList.add('hidden');
+          } else {
+            messageElement.classList.remove('hidden');
+            messageElement.innerText = 'ไม่พบใบเตือน';
+          }
+          hideLoading();
+        })
+        .withFailureHandler(function(err) {
+          console.error("โหลดใบเตือนล้มเหลว:", err);
+          document.getElementById('warningsMessage').classList.remove('hidden');
+          document.getElementById('warningsMessage').innerText = 'เกิดข้อผิดพลาดในการโหลดข้อมูล';
+          hideLoading();
+        })
+        .getWarnings(currentLoggedInEmpID);
+    }
+
+    // ================================================================
+    // 6. Supervisor Approvals
+    //    (ฟังก์ชันสำหรับผู้บริหารในการอนุมัติการลา)
+    // ================================================================
+    function getPendingLeaveRequests() {
+      showLoading('กำลังโหลดคำขอการลา...');
+      const filter = document.getElementById('leaveStatusFilter').value;
+
+      google.script.run
+        .withSuccessHandler(function(response) {
+          const tbody = document.getElementById('leaveApprovalTableBody');
+          tbody.innerHTML = '';
+          const messageElement = document.getElementById('leaveApprovalMessage');
+          let requests = response.data || [];
+
+          if (filter !== 'all') {
+            requests = requests.filter(req => req.status === filter);
+          }
+
+          if (response.success && requests.length > 0) {
+            requests.forEach(req => {
+              const row = document.createElement('tr');
+              const statusColor = getStatusColor(req.status);
+              const statusText = getStatusText(req.status);
+              row.innerHTML = `
+                  <td class="py-3 px-4">${req.empID}</td>
+                  <td class="py-3 px-4">${req.leaveType}</td>
+                  <td class="py-3 px-4">${req.startDate} - ${req.endDate}</td>
+                  <td class="py-3 px-4">${req.duration}</td>
+                  <td class="py-3 px-4"><span class="px-2 py-1 rounded-full text-white ${statusColor}">${statusText}</span></td>
+                  <td class="py-3 px-4 flex items-center space-x-2">
+                    <button class="text-blue-500 hover:underline" onclick="showLeaveDetails('${req.timestamp}')">รายละเอียด</button>
+                    ${req.status === 'Pending' ? `
+                      <button class="text-green-500 hover:underline" onclick="approveLeave('${req.timestamp}')">อนุมัติ</button>
+                      <button class="text-red-500 hover:underline" onclick="rejectLeave('${req.timestamp}')">ไม่อนุมัติ</button>
+                    ` : ''}
+                  </td>
+              `;
+              tbody.appendChild(row);
+            });
+            messageElement.classList.add('hidden');
+          } else {
+            messageElement.classList.remove('hidden');
+            messageElement.innerText = 'ไม่พบคำขออนุมัติ';
+          }
+          hideLoading();
+        })
+        .withFailureHandler(function(err) {
+          console.error("โหลดคำขอการลาล้มเหลว:", err);
+          document.getElementById('leaveApprovalMessage').classList.remove('hidden');
+          document.getElementById('leaveApprovalMessage').innerText = 'เกิดข้อผิดพลาดในการโหลดข้อมูล';
+          hideLoading();
+        })
+        .getPendingLeaveRequests(currentLoggedInEmpID);
+    }
+
+    document.getElementById('leaveStatusFilter').addEventListener('change', getPendingLeaveRequests);
+
+
+    // ================================================================
+    // 7. Event Handlers & Utility Functions
+    //    (ฟังก์ชันสำหรับการจัดการเหตุการณ์ต่างๆ)
+    // ================================================================
+    function editReason(date, time, reason) {
+      currentLateRecordToEdit = {
+        date,
+        time,
+        reason
+      };
+      document.getElementById('editDateDisplay').value = date;
+      document.getElementById('editTimeDisplay').value = time;
+      document.getElementById('editReasonText').value = reason;
+      hideMessage('editReasonMessage');
+      showModal('editReasonModal');
+    }
+
+    function saveEditedReason() {
+      const newReason = document.getElementById('editReasonText').value;
+
+      if (!newReason) {
+        showMessage('editReasonMessage', 'กรุณากรอกเหตุผล');
+        return;
+      }
+
+      showLoading('กำลังบันทึกเหตุผล...');
+
+      google.script.run
+        .withSuccessHandler(function(response) {
+          if (response.success) {
+            hideModal('editReasonModal');
+            getLateRecords(currentLoggedInEmpID);
+            alert('บันทึกเหตุผลเรียบร้อยแล้ว');
+          } else {
+            showMessage('editReasonMessage', response.message);
+          }
+          hideLoading();
+        })
+        .withFailureHandler(function(err) {
+          console.error("บันทึกเหตุผลล้มเหลว:", err);
+          showMessage('editReasonMessage', 'เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+          hideLoading();
+        })
+        .updateLateRecordReason(currentLoggedInEmpID, currentLateRecordToEdit.date, newReason);
+    }
+  </script>
+
+</body>
+
+</html>
