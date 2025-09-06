@@ -10,12 +10,21 @@
 
   <script src="https://cdn.tailwindcss.com"></script>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <link href="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.js"></script>
 
   <style>
+    body {
+      font-family: 'Sarabun', sans-serif;
+    }
+
     @keyframes bounce {
       0%,
       80%,
@@ -109,7 +118,7 @@
   </style>
 </head>
 
-<body class="font-kanit text-2xl md:text-base">
+<body class="font-sarabun text-lg md:text-base">
 
   <div class="fixed inset-0 bg-black bg-opacity-70 flex flex-col items-center justify-center z-[1000] opacity-0 invisible transition-opacity duration-300" id="loadingOverlay">
     <div class="dot-loader">
@@ -123,24 +132,24 @@
   <div class="w-full h-full flex items-center justify-center bg-[#1a1a1a] min-h-screen relative overflow-hidden" id="loginWrapper">
     <div id="loginForm" class="w-full max-w-2xl p-8 rounded-2xl shadow-xl">
       <h2 class="text-white text-5xl font-bold text-center mb-4">เข้าสู่ระบบ<span class="text-[#e10600]"> พนักงาน</span></h2>
-      <p class="text-3xl text-gray-400 text-center mb-8">โตโยต้า เอ็กซเซลเลนท์</p>
+      <p class="text-xl text-gray-400 text-center mb-8">โตโยต้า เอ็กซเซลเลนท์</p>
       <div class="bg-gradient-to-r from-[#e10600] to-black h-1.5 my-6"></div>
 
-      <label class="block font-medium text-gray-300 mb-2">รหัสพนักงาน</label>
+      <label class="block font-medium text-gray-300 mb-2 text-base">รหัสพนักงาน</label>
       <div class="relative mb-6">
-        <input class="w-full p-6 border border-gray-300 rounded-lg bg-gray-50 text-xl focus:border-sky-500 focus:bg-white focus:outline-none" type="tel" inputmode="numeric" id="empID" placeholder="รหัสพนักงาน" required autocomplete="off" />
+        <input class="w-full p-4 border border-gray-300 rounded-lg bg-gray-50 text-base focus:border-sky-500 focus:bg-white focus:outline-none" type="tel" inputmode="numeric" id="empID" placeholder="รหัสพนักงาน" required autocomplete="off" />
       </div>
 
-      <label class="block font-medium text-gray-300 mb-2">พาสเวิร์ด</label>
+      <label class="block font-medium text-gray-300 mb-2 text-base">พาสเวิร์ด</label>
       <div class="relative mb-6">
-        <input class="w-full p-6 border border-gray-300 rounded-lg bg-gray-50 text-xl focus:border-sky-500 focus:bg-white focus:outline-none" type="password" id="password" placeholder="รหัสผ่าน" required autocomplete="off" />
+        <input class="w-full p-4 border border-gray-300 rounded-lg bg-gray-50 text-base focus:border-sky-500 focus:bg-white focus:outline-none" type="password" id="password" placeholder="รหัสผ่าน" required autocomplete="off" />
       </div>
 
-      <button class="w-full py-4 bg-[#e10600] rounded-full text-white font-semibold cursor-pointer transition-all duration-300 mt-2 shadow-lg hover:bg-red-600 hover:scale-[0.99] active:scale-98" onclick="loginUser()">เข้าสู่ระบบ</button>
+      <button class="w-full py-3 bg-[#e10600] rounded-full text-white font-semibold cursor-pointer transition-all duration-300 mt-2 shadow-lg hover:bg-red-600 hover:scale-[0.99] active:scale-98 text-lg" onclick="loginUser()">เข้าสู่ระบบ</button>
 
-      <div id="loginMessage" class="text-red-400 text-center mt-4 min-h-[20px]"></div>
+      <div id="loginMessage" class="text-red-400 text-center mt-4 min-h-[20px] text-base"></div>
 
-      <p class="text-gray-400 text-center mt-5">
+      <p class="text-gray-400 text-center mt-5 text-base">
         ยังไม่มีบัญชี? <a href="#" class="text-[#e10600] no-underline font-medium hover:underline">สมัครสมาชิก</a>
       </p>
     </div>
@@ -148,132 +157,132 @@
 
   <div class="bg-gray-100 text-gray-800 min-h-screen flex flex-col hidden" id="dashboard">
 
-    <header class="bg-white p-4 lg:p-8 flex flex-wrap justify-between items-center shadow-md">
+    <header class="bg-white p-4 lg:p-6 flex flex-wrap justify-between items-center shadow-md">
       <div class="flex items-center">
-        <img src="https://i.ibb.co/6Pqj4zX/logo-hrm.png" alt="โลโก้" class="h-10 lg:h-12 mr-4" />
-        <span class="font-bold text-xl md:text-2xl">ระบบจัดการพนักงาน (HRM)</span>
+        <img src="https://i.ibb.co/6Pqj4zX/logo-hrm.png" alt="โลโก้" class="h-8 lg:h-10 mr-4" />
+        <span class="font-bold text-lg md:text-xl">ระบบจัดการพนักงาน (HRM)</span>
       </div>
 
-      <div class="flex flex-wrap items-center mt-4 lg:mt-0 md:text-xl">
+      <div class="flex flex-wrap items-center mt-4 lg:mt-0 text-sm md:text-base">
         <div class="flex items-center mr-4 lg:mr-8">
-          <img id="profilePhoto" src="https://i.ibb.co/3kXpYv9/User.png" class="w-12 h-12 rounded-full object-cover border-4 border-white cursor-pointer" onclick="showModal('profilePhotoModal')" />
+          <img id="profilePhoto" src="https://i.ibb.co/3kXpYv9/User.png" class="w-10 h-10 rounded-full object-cover border-2 border-white cursor-pointer" onclick="showModal('profilePhotoModal')" />
           <div class="ml-2">
-            <h4 class="m-0 text-xl font-semibold" id="userName"></h4>
-            <p class="m-0 text-gray-500 text-base" id="employeeID"></p>
+            <h4 class="m-0 text-base font-semibold" id="userName"></h4>
+            <p class="m-0 text-gray-500 text-xs" id="employeeID"></p>
           </div>
         </div>
-        <button class="bg-red-600 text-white px-4 py-2 rounded-md cursor-pointer text-base transition-colors duration-300 hover:bg-red-700" id="logoutBtn" onclick="logoutUser()">ออกจากระบบ</button>
+        <button class="bg-red-600 text-white px-3 py-1 rounded-md cursor-pointer text-sm transition-colors duration-300 hover:bg-red-700" id="logoutBtn" onclick="logoutUser()">ออกจากระบบ</button>
       </div>
     </header>
 
-    <main class="flex-grow p-4 md:p-8 flex flex-col">
-      <nav class="bg-white rounded-xl shadow-md mb-8 flex flex-wrap justify-center overflow-hidden">
-        <a class="tab-link flex-grow text-center py-4 lg:py-6 px-4 cursor-pointer transition-all duration-300 relative text-xl lg:text-2xl font-semibold text-gray-600 border-b-2 border-transparent hover:bg-gray-100" id="tab-profile" onclick="changeTab('profile')">Profile</a>
-        <a class="tab-link flex-grow text-center py-4 lg:py-6 px-4 cursor-pointer transition-all duration-300 relative text-xl lg:text-2xl font-semibold text-gray-600 border-b-2 border-transparent hover:bg-gray-100" id="tab-late-records" onclick="changeTab('late-records')">บันทึกการมาสาย</a>
-        <a class="tab-link flex-grow text-center py-4 lg:py-6 px-4 cursor-pointer transition-all duration-300 relative text-xl lg:text-2xl font-semibold text-gray-600 border-b-2 border-transparent hover:bg-gray-100" id="tab-leave-records" onclick="changeTab('leave-records')">บันทึกการลา</a>
-        <a class="tab-link flex-grow text-center py-4 lg:py-6 px-4 cursor-pointer transition-all duration-300 relative text-xl lg:text-2xl font-semibold text-gray-600 border-b-2 border-transparent hover:bg-gray-100" id="tab-article" onclick="changeTab('article')">บทความ</a>
-        <a class="tab-link flex-grow text-center py-4 lg:py-6 px-4 cursor-pointer transition-all duration-300 relative text-xl lg:text-2xl font-semibold text-gray-600 border-b-2 border-transparent hover:bg-gray-100" id="tab-warnings" onclick="changeTab('warnings')">ใบเตือน</a>
-        <a class="tab-link flex-grow text-center py-4 lg:py-6 px-4 cursor-pointer transition-all duration-300 relative text-xl lg:text-2xl font-semibold text-gray-600 border-b-2 border-transparent hover:bg-gray-100" id="tab-supervisor" onclick="changeTab('supervisor')">อนุมัติคำขอ</a>
+    <main class="flex-grow p-4 md:p-6 flex flex-col">
+      <nav class="bg-white rounded-xl shadow-md mb-6 flex flex-wrap justify-center overflow-hidden">
+        <a class="tab-link flex-grow text-center py-3 lg:py-4 px-3 cursor-pointer transition-all duration-300 relative text-sm lg:text-base font-semibold text-gray-600 border-b-2 border-transparent hover:bg-gray-100" id="tab-profile" onclick="changeTab('profile')">Profile</a>
+        <a class="tab-link flex-grow text-center py-3 lg:py-4 px-3 cursor-pointer transition-all duration-300 relative text-sm lg:text-base font-semibold text-gray-600 border-b-2 border-transparent hover:bg-gray-100" id="tab-late-records" onclick="changeTab('late-records')">บันทึกการมาสาย</a>
+        <a class="tab-link flex-grow text-center py-3 lg:py-4 px-3 cursor-pointer transition-all duration-300 relative text-sm lg:text-base font-semibold text-gray-600 border-b-2 border-transparent hover:bg-gray-100" id="tab-leave-records" onclick="changeTab('leave-records')">บันทึกการลา</a>
+        <a class="tab-link flex-grow text-center py-3 lg:py-4 px-3 cursor-pointer transition-all duration-300 relative text-sm lg:text-base font-semibold text-gray-600 border-b-2 border-transparent hover:bg-gray-100" id="tab-article" onclick="changeTab('article')">บทความ</a>
+        <a class="tab-link flex-grow text-center py-3 lg:py-4 px-3 cursor-pointer transition-all duration-300 relative text-sm lg:text-base font-semibold text-gray-600 border-b-2 border-transparent hover:bg-gray-100" id="tab-warnings" onclick="changeTab('warnings')">ใบเตือน</a>
+        <a class="tab-link flex-grow text-center py-3 lg:py-4 px-3 cursor-pointer transition-all duration-300 relative text-sm lg:text-base font-semibold text-gray-600 border-b-2 border-transparent hover:bg-gray-100" id="tab-supervisor" onclick="changeTab('supervisor')">อนุมัติคำขอ</a>
       </nav>
 
-      <div id="tab-content-profile" class="tab-content active bg-white p-8 rounded-xl shadow-md">
+      <div id="tab-content-profile" class="tab-content active bg-white p-6 rounded-xl shadow-md text-sm">
         <div class="flex flex-col md:flex-row items-center mb-6">
-          <div class="mb-6 md:mb-0 md:mr-8 text-center">
-            <img id="profilePhotoMain" src="https://i.ibb.co/3kXpYv9/User.png" class="w-40 h-40 rounded-full object-cover border-4 border-red-600 shadow-md" />
+          <div class="mb-4 md:mb-0 md:mr-6 text-center">
+            <img id="profilePhotoMain" src="https://i.ibb.co/3kXpYv9/User.png" class="w-32 h-32 rounded-full object-cover border-4 border-red-600 shadow-md" />
           </div>
           <div class="w-full">
-            <h3 class="text-3xl font-bold border-b-2 border-red-600 pb-2 mb-4">ข้อมูลส่วนตัว</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <p class="bg-gray-100 p-4 rounded-lg"><strong>รหัสพนักงาน:</strong> <span id="profileEmpID"></span></p>
-              <p class="bg-gray-100 p-4 rounded-lg"><strong>ชื่อ-นามสกุล:</strong> <span id="profileFullName"></span></p>
-              <p class="bg-gray-100 p-4 rounded-lg"><strong>ชื่อเล่น:</strong> <span id="profileNickname"></span></p>
-              <p class="bg-gray-100 p-4 rounded-lg"><strong>ตำแหน่ง:</strong> <span id="profilePosition"></span></p>
-              <p class="bg-gray-100 p-4 rounded-lg"><strong>แผนก:</strong> <span id="profileDepartment"></span></p>
-              <p class="bg-gray-100 p-4 rounded-lg"><strong>ฝ่าย:</strong> <span id="profileSection"></span></p>
-              <p class="bg-gray-100 p-4 rounded-lg"><strong>บริษัท:</strong> <span id="profileBranch"></span></p>
-              <p class="bg-gray-100 p-4 rounded-lg"><strong>เบอร์โทร:</strong> <span id="profilePhone"></span></p>
-              <p class="bg-gray-100 p-4 rounded-lg"><strong>วันที่เริ่มงาน:</strong> <span id="profileStartDate"></span></p>
-              <p class="bg-gray-100 p-4 rounded-lg"><strong>สถานะงาน:</strong> <span id="profileWorkStatus"></span></p>
+            <h3 class="text-xl font-bold border-b-2 border-red-600 pb-2 mb-4">ข้อมูลส่วนตัว</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+              <p class="bg-gray-100 p-3 rounded-lg"><strong>รหัสพนักงาน:</strong> <span id="profileEmpID"></span></p>
+              <p class="bg-gray-100 p-3 rounded-lg"><strong>ชื่อ-นามสกุล:</strong> <span id="profileFullName"></span></p>
+              <p class="bg-gray-100 p-3 rounded-lg"><strong>ชื่อเล่น:</strong> <span id="profileNickname"></span></p>
+              <p class="bg-gray-100 p-3 rounded-lg"><strong>ตำแหน่ง:</strong> <span id="profilePosition"></span></p>
+              <p class="bg-gray-100 p-3 rounded-lg"><strong>แผนก:</strong> <span id="profileDepartment"></span></p>
+              <p class="bg-gray-100 p-3 rounded-lg"><strong>ฝ่าย:</strong> <span id="profileSection"></span></p>
+              <p class="bg-gray-100 p-3 rounded-lg"><strong>บริษัท:</strong> <span id="profileBranch"></span></p>
+              <p class="bg-gray-100 p-3 rounded-lg"><strong>เบอร์โทร:</strong> <span id="profilePhone"></span></p>
+              <p class="bg-gray-100 p-3 rounded-lg"><strong>วันที่เริ่มงาน:</strong> <span id="profileStartDate"></span></p>
+              <p class="bg-gray-100 p-3 rounded-lg"><strong>สถานะงาน:</strong> <span id="profileWorkStatus"></span></p>
             </div>
           </div>
         </div>
       </div>
 
-      <div id="tab-content-late-records" class="tab-content hidden bg-white p-8 rounded-xl shadow-md">
-        <h3 class="text-3xl font-bold border-b-2 border-red-600 pb-2 mb-4">บันทึกการมาสาย</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="lateRecordsContainer">
+      <div id="tab-content-late-records" class="tab-content hidden bg-white p-6 rounded-xl shadow-md text-sm">
+        <h3 class="text-xl font-bold border-b-2 border-red-600 pb-2 mb-4">บันทึกการมาสาย</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="lateRecordsContainer">
           </div>
-        <p id="lateRecordsMessage" class="mt-4 text-center text-gray-600 hidden">ไม่พบบันทึกการมาสาย</p>
+        <p id="lateRecordsMessage" class="mt-4 text-center text-gray-600 hidden text-sm">ไม่พบบันทึกการมาสาย</p>
       </div>
 
-      <div id="tab-content-leave-records" class="tab-content hidden bg-white p-8 rounded-xl shadow-md">
-        <h3 class="text-3xl font-bold border-b-2 border-red-600 pb-2 mb-4">บันทึกการลา</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6" id="leaveSummaryContainer">
+      <div id="tab-content-leave-records" class="tab-content hidden bg-white p-6 rounded-xl shadow-md text-sm">
+        <h3 class="text-xl font-bold border-b-2 border-red-600 pb-2 mb-4">บันทึกการลา</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4" id="leaveSummaryContainer">
           </div>
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto text-sm">
           <table class="w-full min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
             <thead>
-              <tr class="bg-gray-100 text-left text-gray-700">
-                <th class="py-3 px-4 font-semibold">ประเภทการลา</th>
-                <th class="py-3 px-4 font-semibold">ช่วงเวลา</th>
-                <th class="py-3 px-4 font-semibold">วันที่ลา</th>
-                <th class="py-3 px-4 font-semibold">ถึงวันที่</th>
-                <th class="py-3 px-4 font-semibold">จำนวน</th>
-                <th class="py-3 px-4 font-semibold">สถานะ</th>
-                <th class="py-3 px-4 font-semibold">Action</th>
+              <tr class="bg-gray-100 text-left text-gray-700 text-sm">
+                <th class="py-2 px-3 font-semibold">ประเภทการลา</th>
+                <th class="py-2 px-3 font-semibold">ช่วงเวลา</th>
+                <th class="py-2 px-3 font-semibold">วันที่ลา</th>
+                <th class="py-2 px-3 font-semibold">ถึงวันที่</th>
+                <th class="py-2 px-3 font-semibold">จำนวน</th>
+                <th class="py-2 px-3 font-semibold">สถานะ</th>
+                <th class="py-2 px-3 font-semibold">Action</th>
               </tr>
             </thead>
-            <tbody id="leaveRecordsTableBody" class="text-gray-600">
+            <tbody id="leaveRecordsTableBody" class="text-gray-600 text-sm">
               </tbody>
           </table>
         </div>
-        <p id="leaveRecordsMessage" class="mt-4 text-center text-gray-600 hidden">ไม่พบบันทึกการลา</p>
+        <p id="leaveRecordsMessage" class="mt-4 text-center text-gray-600 hidden text-sm">ไม่พบบันทึกการลา</p>
       </div>
 
-      <div id="tab-content-article" class="tab-content hidden bg-white p-8 rounded-xl shadow-md">
-        <h3 class="text-3xl font-bold border-b-2 border-red-600 pb-2 mb-4">บทความที่น่าสนใจ</h3>
-        <div class="overflow-x-auto">
+      <div id="tab-content-article" class="tab-content hidden bg-white p-6 rounded-xl shadow-md text-sm">
+        <h3 class="text-xl font-bold border-b-2 border-red-600 pb-2 mb-4">บทความที่น่าสนใจ</h3>
+        <div class="overflow-x-auto text-sm">
           <table class="w-full min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
             <thead>
-              <tr class="bg-gray-100 text-left text-gray-700">
-                <th class="py-3 px-4 font-semibold">หัวข้อบทความ</th>
-                <th class="py-3 px-4 font-semibold">วันเผยแพร่</th>
-                <th class="py-3 px-4 font-semibold">ดาวน์โหลด</th>
+              <tr class="bg-gray-100 text-left text-gray-700 text-sm">
+                <th class="py-2 px-3 font-semibold">หัวข้อบทความ</th>
+                <th class="py-2 px-3 font-semibold">วันเผยแพร่</th>
+                <th class="py-2 px-3 font-semibold">ดาวน์โหลด</th>
               </tr>
             </thead>
-            <tbody id="articleTableBody" class="text-gray-600">
+            <tbody id="articleTableBody" class="text-gray-600 text-sm">
               </tbody>
           </table>
         </div>
-        <p id="articleMessage" class="mt-4 text-center text-gray-600 hidden">ไม่พบบทความ</p>
+        <p id="articleMessage" class="mt-4 text-center text-gray-600 hidden text-sm">ไม่พบบทความ</p>
       </div>
 
-      <div id="tab-content-warnings" class="tab-content hidden bg-white p-8 rounded-xl shadow-md">
-        <h3 class="text-3xl font-bold border-b-2 border-red-600 pb-2 mb-4">ใบเตือน</h3>
-        <div class="overflow-x-auto">
+      <div id="tab-content-warnings" class="tab-content hidden bg-white p-6 rounded-xl shadow-md text-sm">
+        <h3 class="text-xl font-bold border-b-2 border-red-600 pb-2 mb-4">ใบเตือน</h3>
+        <div class="overflow-x-auto text-sm">
           <table class="w-full min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
             <thead>
-              <tr class="bg-gray-100 text-left text-gray-700">
-                <th class="py-3 px-4 font-semibold">ประเภทใบเตือน</th>
-                <th class="py-3 px-4 font-semibold">เหตุผล</th>
-                <th class="py-3 px-4 font-semibold">วันที่ออก</th>
-                <th class="py-3 px-4 font-semibold">อายุคงเหลือ (วัน)</th>
-                <th class="py-3 px-4 font-semibold">ไฟล์แนบ</th>
+              <tr class="bg-gray-100 text-left text-gray-700 text-sm">
+                <th class="py-2 px-3 font-semibold">ประเภทใบเตือน</th>
+                <th class="py-2 px-3 font-semibold">เหตุผล</th>
+                <th class="py-2 px-3 font-semibold">วันที่ออก</th>
+                <th class="py-2 px-3 font-semibold">อายุคงเหลือ (วัน)</th>
+                <th class="py-2 px-3 font-semibold">ไฟล์แนบ</th>
               </tr>
             </thead>
-            <tbody id="warningsTableBody" class="text-gray-600">
+            <tbody id="warningsTableBody" class="text-gray-600 text-sm">
               </tbody>
           </table>
         </div>
-        <p id="warningsMessage" class="mt-4 text-center text-gray-600 hidden">ไม่พบใบเตือน</p>
+        <p id="warningsMessage" class="mt-4 text-center text-gray-600 hidden text-sm">ไม่พบใบเตือน</p>
       </div>
 
-      <div id="tab-content-supervisor" class="tab-content hidden bg-white p-8 rounded-xl shadow-md">
-        <div class="flex flex-col md:flex-row items-center justify-between mb-6">
-          <h3 class="text-3xl font-bold border-b-2 border-red-600 pb-2 mb-4 md:mb-0">การอนุมัติคำขอ</h3>
-          <div class="flex items-center">
-            <span class="text-lg mr-2 text-gray-600">สถานะ:</span>
-            <select id="leaveStatusFilter" class="form-select border rounded-md p-2 text-base">
+      <div id="tab-content-supervisor" class="tab-content hidden bg-white p-6 rounded-xl shadow-md text-sm">
+        <div class="flex flex-col md:flex-row items-center justify-between mb-4">
+          <h3 class="text-xl font-bold border-b-2 border-red-600 pb-2 mb-2 md:mb-0">การอนุมัติคำขอ</h3>
+          <div class="flex items-center text-sm">
+            <span class="text-sm mr-2 text-gray-600">สถานะ:</span>
+            <select id="leaveStatusFilter" class="form-select border rounded-md p-1 text-sm">
               <option value="all">ทั้งหมด</option>
               <option value="Pending">รออนุมัติ</option>
               <option value="Approved">อนุมัติแล้ว</option>
@@ -281,43 +290,43 @@
             </select>
           </div>
         </div>
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto text-sm">
           <table class="w-full min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
             <thead>
-              <tr class="bg-gray-100 text-left text-gray-700">
-                <th class="py-3 px-4 font-semibold">รหัสพนักงาน</th>
-                <th class="py-3 px-4 font-semibold">ประเภท</th>
-                <th class="py-3 px-4 font-semibold">วันที่</th>
-                <th class="py-3 px-4 font-semibold">จำนวน</th>
-                <th class="py-3 px-4 font-semibold">สถานะ</th>
-                <th class="py-3 px-4 font-semibold">Action</th>
+              <tr class="bg-gray-100 text-left text-gray-700 text-sm">
+                <th class="py-2 px-3 font-semibold">รหัสพนักงาน</th>
+                <th class="py-2 px-3 font-semibold">ประเภท</th>
+                <th class="py-2 px-3 font-semibold">วันที่</th>
+                <th class="py-2 px-3 font-semibold">จำนวน</th>
+                <th class="py-2 px-3 font-semibold">สถานะ</th>
+                <th class="py-2 px-3 font-semibold">Action</th>
               </tr>
             </thead>
-            <tbody id="leaveApprovalTableBody" class="text-gray-600">
+            <tbody id="leaveApprovalTableBody" class="text-gray-600 text-sm">
               </tbody>
           </table>
         </div>
-        <p id="leaveApprovalMessage" class="mt-4 text-center text-gray-600 hidden">ไม่พบคำขออนุมัติ</p>
+        <p id="leaveApprovalMessage" class="mt-4 text-center text-gray-600 hidden text-sm">ไม่พบคำขออนุมัติ</p>
       </div>
     </main>
 
   </div>
 
   <div class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 z-[1000] justify-center items-center hidden" id="editReasonModal">
-    <div class="modal-content bg-white p-8 rounded-xl relative w-full max-w-lg shadow-xl">
-      <span class="close-button absolute top-4 right-6 text-3xl font-bold cursor-pointer text-gray-400 hover:text-gray-700" onclick="hideModal('editReasonModal')">&times;</span>
-      <h3 class="text-3xl text-red-600 font-bold border-b-2 border-red-600 pb-2 mb-6">แก้ไขเหตุผลการมาสาย</h3>
-      <div id="editReasonForm" class="flex flex-col space-y-4">
-        <label class="font-semibold text-lg">วันที่:</label>
-        <input type="text" id="editDateDisplay" class="form-input w-full p-3 border border-gray-300 rounded-md text-lg" readonly>
-        <label class="font-semibold text-lg">เวลาที่มาถึง:</label>
-        <input type="text" id="editTimeDisplay" class="form-input w-full p-3 border border-gray-300 rounded-md text-lg" readonly>
-        <label class="font-semibold text-lg">เหตุผล:</label>
-        <textarea id="editReasonText" class="form-input w-full p-3 border border-gray-300 rounded-md text-lg" rows="3" required></textarea>
-        <div id="editReasonMessage" class="alert text-lg mt-2"></div>
+    <div class="modal-content bg-white p-6 rounded-xl relative w-full max-w-lg shadow-xl text-sm">
+      <span class="close-button absolute top-4 right-6 text-xl font-bold cursor-pointer text-gray-400 hover:text-gray-700" onclick="hideModal('editReasonModal')">&times;</span>
+      <h3 class="text-lg text-red-600 font-bold border-b-2 border-red-600 pb-2 mb-4">แก้ไขเหตุผลการมาสาย</h3>
+      <div id="editReasonForm" class="flex flex-col space-y-3">
+        <label class="font-semibold text-sm">วันที่:</label>
+        <input type="text" id="editDateDisplay" class="form-input w-full p-2 border border-gray-300 rounded-md text-sm" readonly>
+        <label class="font-semibold text-sm">เวลาที่มาถึง:</label>
+        <input type="text" id="editTimeDisplay" class="form-input w-full p-2 border border-gray-300 rounded-md text-sm" readonly>
+        <label class="font-semibold text-sm">เหตุผล:</label>
+        <textarea id="editReasonText" class="form-input w-full p-2 border border-gray-300 rounded-md text-sm" rows="3" required></textarea>
+        <div id="editReasonMessage" class="alert text-sm mt-2"></div>
         <div class="flex justify-between items-center mt-4">
-          <button class="btn bg-blue-600 text-white px-6 py-2 rounded-md transition-colors duration-300 hover:bg-blue-700" id="saveReasonButton" onclick="saveEditedReason()">บันทึก</button>
-          <button class="btn bg-gray-300 text-gray-800 px-6 py-2 rounded-md transition-colors duration-300 hover:bg-gray-400" onclick="hideModal('editReasonModal')">ยกเลิก</button>
+          <button class="btn bg-blue-600 text-white px-4 py-1 rounded-md transition-colors duration-300 hover:bg-blue-700 text-sm" id="saveReasonButton" onclick="saveEditedReason()">บันทึก</button>
+          <button class="btn bg-gray-300 text-gray-800 px-4 py-1 rounded-md transition-colors duration-300 hover:bg-gray-400 text-sm" onclick="hideModal('editReasonModal')">ยกเลิก</button>
         </div>
       </div>
     </div>
@@ -325,7 +334,7 @@
 
 
   <div id="leaveDetailModal" class="custom-modal">
-    <div class="custom-modal-content">
+    <div class="custom-modal-content text-sm">
       <button class="close-btn" onclick="closeModal()">
         <i class="fas fa-times"></i>
       </button>
@@ -334,7 +343,7 @@
   </div>
 
   <div id="showLeaveDetailModal" class="custom-modal">
-    <div class="custom-modal-content">
+    <div class="custom-modal-content text-sm">
       <button class="close-btn" onclick="closeshowModal()">
         <i class="fas fa-times"></i>
       </button>
@@ -343,33 +352,32 @@
   </div>
 
   <div id="profilePhotoModal" class="custom-modal">
-    <div class="custom-modal-content">
+    <div class="custom-modal-content text-sm">
       <button class="close-button" onclick="hideModal('profilePhotoModal')">&times;</button>
       <div class="text-center p-4">
-        <h3 class="text-3xl text-red-600 font-bold mb-4">อัปโหลดรูปภาพโปรไฟล์</h3>
+        <h3 class="text-lg text-red-600 font-bold mb-4">อัปโหลดรูปภาพโปรไฟล์</h3>
         <div class="mb-4">
           <img id="imagePreview" class="w-full h-auto max-w-xs mx-auto mb-4 border border-gray-300" src="" alt="Image to be cropped">
         </div>
         <input type="file" id="imageInput" accept="image/*" class="w-full mb-4 p-2 border rounded-md" />
         <div class="flex justify-center space-x-4">
-          <button id="uploadButton" class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700" onclick="uploadImage()">อัปโหลด</button>
-          <button id="cancelButton" class="bg-gray-300 text-gray-800 px-6 py-2 rounded-md hover:bg-gray-400" onclick="hideModal('profilePhotoModal')">ยกเลิก</button>
+          <button id="uploadButton" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 text-sm" onclick="uploadImage()">อัปโหลด</button>
+          <button id="cancelButton" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-400 text-sm" onclick="hideModal('profilePhotoModal')">ยกเลิก</button>
         </div>
       </div>
     </div>
   </div>
 
   <div id="uploadLeaveAttachmentModal" class="custom-modal">
-    <div class="custom-modal-content">
+    <div class="custom-modal-content text-sm">
       <span class="close-button" onclick="hideModal('uploadLeaveAttachmentModal')">&times;</span>
-      <h3 class="text-3xl text-red-600 font-bold mb-4">อัปโหลดไฟล์แนบสำหรับการลา</h3>
+      <h3 class="text-lg text-red-600 font-bold mb-4">อัปโหลดไฟล์แนบสำหรับการลา</h3>
       <input type="file" id="leaveAttachmentInput" class="w-full mb-4 p-2 border rounded-md" accept=".pdf, .jpg, .jpeg, .png" />
-      <div id="attachmentMessage" class="alert mt-2"></div>
-      <button id="submitAttachment" class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700" onclick="uploadAttachment()">ส่ง</button>
-      <button class="bg-gray-300 text-gray-800 px-6 py-2 rounded-md hover:bg-gray-400" onclick="hideModal('uploadLeaveAttachmentModal')">ยกเลิก</button>
+      <div id="attachmentMessage" class="alert mt-2 text-sm"></div>
+      <button id="submitAttachment" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 text-sm" onclick="uploadAttachment()">ส่ง</button>
+      <button class="bg-gray-300 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-400 text-sm" onclick="hideModal('uploadLeaveAttachmentModal')">ยกเลิก</button>
     </div>
   </div>
-
 
   <script>
     // ================================================================
@@ -581,17 +589,17 @@
           if (response.success && response.data.length > 0) {
             response.data.forEach(record => {
               const card = document.createElement('div');
-              card.className = 'bg-white rounded-xl shadow-md p-6 relative transition-transform duration-300 hover:scale-[1.01]';
+              card.className = 'bg-white rounded-xl shadow-md p-4 relative transition-transform duration-300 hover:scale-[1.01]';
               card.innerHTML = `
-                <button class="edit-reason-btn absolute top-4 right-4 text-gray-500 hover:text-gray-800" onclick="editReason('${record.date}', '${record.time}')" data-date="${record.date}" data-time="${record.time}" data-reason="${record.reason}">
+                <button class="edit-reason-btn absolute top-2 right-2 text-gray-500 hover:text-gray-800" onclick="editReason('${record.date}', '${record.time}')" data-date="${record.date}" data-time="${record.time}" data-reason="${record.reason}">
                   <i class="fas fa-edit"></i>
                 </button>
-                <h4 class="text-xl text-red-600 font-bold border-b-2 border-red-600 pb-2 mb-4">วันที่: ${record.date}</h4>
-                <p><strong>เวลามาถึง:</strong> ${record.time}</p>
-                <p><strong>จำนวนนาที:</strong> ${record.lateMinutes}</p>
-                <p><strong>สถานะ:</strong> ${record.status}</p>
-                <p><strong>เหตุผล:</strong> ${record.reason || 'ไม่ระบุ'}</p>
-                <p><strong>บันทึกโดย:</strong> ${record.recorder}</p>
+                <h4 class="text-base text-red-600 font-bold border-b-2 border-red-600 pb-1 mb-2">วันที่: ${record.date}</h4>
+                <p class="text-sm"><strong>เวลามาถึง:</strong> ${record.time}</p>
+                <p class="text-sm"><strong>จำนวนนาที:</strong> ${record.lateMinutes}</p>
+                <p class="text-sm"><strong>สถานะ:</strong> ${record.status}</p>
+                <p class="text-sm"><strong>เหตุผล:</strong> ${record.reason || 'ไม่ระบุ'}</p>
+                <p class="text-sm"><strong>บันทึกโดย:</strong> ${record.recorder}</p>
               `;
               container.appendChild(card);
             });
@@ -635,18 +643,18 @@
       for (const type in summary) {
         if (summary.hasOwnProperty(type)) {
           const card = document.createElement('div');
-          card.className = 'bg-white rounded-xl shadow-lg p-5 flex items-center relative transition-transform duration-300 hover:scale-[1.01]';
+          card.className = 'bg-white rounded-xl shadow-lg p-4 flex items-center relative transition-transform duration-300 hover:scale-[1.01]';
           card.innerHTML = `
-            <div class="relative w-24 h-24 mr-5 flex justify-center items-center">
+            <div class="relative w-20 h-20 mr-4 flex justify-center items-center">
               <canvas id="chart-${type}"></canvas>
-              <div class="absolute text-center text-sm font-bold whitespace-nowrap">${summary[type].used}/${summary[type].total}</div>
+              <div class="absolute text-center text-xs font-bold whitespace-nowrap">${summary[type].used}/${summary[type].total}</div>
             </div>
-            <div class="flex-grow">
-              <strong class="block text-2xl mb-1">${type}</strong>
+            <div class="flex-grow text-sm">
+              <strong class="block text-base mb-1">${type}</strong>
               <span class="text-gray-600">ใช้ไป: ${summary[type].used}</span>
               <span class="text-gray-600 block">คงเหลือ: ${summary[type].remaining}</span>
             </div>
-            <i class="fas fa-calendar-alt text-[5rem] text-gray-300 opacity-20 absolute top-[-15px] right-[-15px]"></i>
+            <i class="fas fa-calendar-alt text-5xl text-gray-300 opacity-20 absolute top-[-10px] right-[-10px]"></i>
           `;
           container.appendChild(card);
           createChart(document.getElementById(`chart-${type}`), summary[type].used, summary[type].remaining);
@@ -699,13 +707,13 @@
               const statusColor = getStatusColor(record.status);
               const statusText = getStatusText(record.status);
               row.innerHTML = `
-                  <td class="py-3 px-4">${record.leaveType}</td>
-                  <td class="py-3 px-4">${record.period}</td>
-                  <td class="py-3 px-4">${record.startDate}</td>
-                  <td class="py-3 px-4">${record.endDate}</td>
-                  <td class="py-3 px-4">${record.duration}</td>
-                  <td class="py-3 px-4"><span class="px-2 py-1 rounded-full text-white ${statusColor}">${statusText}</span></td>
-                  <td class="py-3 px-4"><button class="text-blue-500 hover:underline" onclick="showLeaveDetails('${record.timestamp}')">รายละเอียด</button></td>
+                  <td class="py-2 px-3">${record.leaveType}</td>
+                  <td class="py-2 px-3">${record.period}</td>
+                  <td class="py-2 px-3">${record.startDate}</td>
+                  <td class="py-2 px-3">${record.endDate}</td>
+                  <td class="py-2 px-3">${record.duration}</td>
+                  <td class="py-2 px-3"><span class="px-2 py-1 rounded-full text-white ${statusColor} text-xs">${statusText}</span></td>
+                  <td class="py-2 px-3"><button class="text-blue-500 hover:underline text-sm" onclick="showLeaveDetails('${record.timestamp}')">รายละเอียด</button></td>
               `;
               tbody.appendChild(row);
             });
@@ -747,15 +755,15 @@
             const detail = response.data;
             const content = document.getElementById('showleaveDetailContent');
             content.innerHTML = `
-              <h3 class="text-2xl font-bold mb-4">รายละเอียดคำขอลา</h3>
-              <p><strong>ชื่อ:</strong> ${detail.fullName}</p>
-              <p><strong>รหัสพนักงาน:</strong> ${detail.empID}</p>
-              <p><strong>ประเภทการลา:</strong> ${detail.leaveType}</p>
-              <p><strong>วันที่ลา:</strong> ${detail.startDate} ถึง ${detail.endDate}</p>
-              <p><strong>ช่วงการลา:</strong> ${detail.period}</p>
-              <p><strong>จำนวน:</strong> ${detail.duration}</p>
-              <p><strong>สาเหตุ:</strong> ${detail.reason}</p>
-              <p><strong>สถานะ:</strong> <span class="px-2 py-1 rounded-full text-white ${getStatusColor(detail.status)}">${getStatusText(detail.status)}</span></p>
+              <h3 class="text-base font-bold mb-2">รายละเอียดคำขอลา</h3>
+              <p class="text-sm"><strong>ชื่อ:</strong> ${detail.fullName}</p>
+              <p class="text-sm"><strong>รหัสพนักงาน:</strong> ${detail.empID}</p>
+              <p class="text-sm"><strong>ประเภทการลา:</strong> ${detail.leaveType}</p>
+              <p class="text-sm"><strong>วันที่ลา:</strong> ${detail.startDate} ถึง ${detail.endDate}</p>
+              <p class="text-sm"><strong>ช่วงการลา:</strong> ${detail.period}</p>
+              <p class="text-sm"><strong>จำนวน:</strong> ${detail.duration}</p>
+              <p class="text-sm"><strong>สาเหตุ:</strong> ${detail.reason}</p>
+              <p class="text-sm"><strong>สถานะ:</strong> <span class="px-2 py-1 rounded-full text-white ${getStatusColor(detail.status)} text-xs">${getStatusText(detail.status)}</span></p>
             `;
             showModal('showLeaveDetailModal');
           } else {
@@ -787,9 +795,9 @@
               const row = document.createElement("tr");
               row.className = 'border-b border-gray-200 hover:bg-gray-50 transition-colors';
               row.innerHTML = `
-                  <td class="py-3 px-4">${article.title}</td>
-                  <td class="py-3 px-4">${article.publishDate}</td>
-                  <td class="py-3 px-4">
+                  <td class="py-2 px-3">${article.title}</td>
+                  <td class="py-2 px-3">${article.publishDate}</td>
+                  <td class="py-2 px-3">
                       ${article.fileLink ? `<a href="${article.fileLink}" target="_blank" class="text-blue-600 hover:underline">เปิดไฟล์</a>` : '-'}
                   </td>
               `;
@@ -824,11 +832,11 @@
               const row = document.createElement('tr');
               row.className = 'border-b border-gray-200 hover:bg-gray-50 transition-colors';
               row.innerHTML = `
-                  <td class="py-3 px-4">${warning.type}</td>
-                  <td class="py-3 px-4">${warning.reason}</td>
-                  <td class="py-3 px-4">${warning.date}</td>
-                  <td class="py-3 px-4">${warning.age}</td>
-                  <td class="py-3 px-4">
+                  <td class="py-2 px-3">${warning.type}</td>
+                  <td class="py-2 px-3">${warning.reason}</td>
+                  <td class="py-2 px-3">${warning.date}</td>
+                  <td class="py-2 px-3">${warning.age}</td>
+                  <td class="py-2 px-3">
                       ${warning.fileLink ? `<a href="${warning.fileLink}" target="_blank" class="text-blue-600 hover:underline">เปิดไฟล์</a>` : '-'}
                   </td>
               `;
@@ -875,16 +883,16 @@
               const statusColor = getStatusColor(req.status);
               const statusText = getStatusText(req.status);
               row.innerHTML = `
-                  <td class="py-3 px-4">${req.empID}</td>
-                  <td class="py-3 px-4">${req.leaveType}</td>
-                  <td class="py-3 px-4">${req.startDate} - ${req.endDate}</td>
-                  <td class="py-3 px-4">${req.duration}</td>
-                  <td class="py-3 px-4"><span class="px-2 py-1 rounded-full text-white ${statusColor}">${statusText}</span></td>
-                  <td class="py-3 px-4 flex items-center space-x-2">
-                    <button class="text-blue-500 hover:underline" onclick="showLeaveDetails('${req.timestamp}')">รายละเอียด</button>
+                  <td class="py-2 px-3">${req.empID}</td>
+                  <td class="py-2 px-3">${req.leaveType}</td>
+                  <td class="py-2 px-3">${req.startDate} - ${req.endDate}</td>
+                  <td class="py-2 px-3">${req.duration}</td>
+                  <td class="py-2 px-3"><span class="px-2 py-1 rounded-full text-white ${statusColor} text-xs">${statusText}</span></td>
+                  <td class="py-2 px-3 flex items-center space-x-2">
+                    <button class="text-blue-500 hover:underline text-sm" onclick="showLeaveDetails('${req.timestamp}')">รายละเอียด</button>
                     ${req.status === 'Pending' ? `
-                      <button class="text-green-500 hover:underline" onclick="approveLeave('${req.timestamp}')">อนุมัติ</button>
-                      <button class="text-red-500 hover:underline" onclick="rejectLeave('${req.timestamp}')">ไม่อนุมัติ</button>
+                      <button class="text-green-500 hover:underline text-sm" onclick="approveLeave('${req.timestamp}')">อนุมัติ</button>
+                      <button class="text-red-500 hover:underline text-sm" onclick="rejectLeave('${req.timestamp}')">ไม่อนุมัติ</button>
                     ` : ''}
                   </td>
               `;
@@ -958,5 +966,5 @@
 
 </body>
 
-
 </html>
+
